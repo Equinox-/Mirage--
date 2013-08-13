@@ -8,18 +8,19 @@
 #include "Inventory.h"
 #include "Stats.h"
 
-class Eqiup
-{
+class Equip {
 public:
-	Eqiup(Raknet& raknet, PlayerInfo& playerInfo, Inventory& inventory);
-	~Eqiup();
+	Equip(Raknet& raknet, PlayerInfo& playerInfo, Inventory& inventory);
+	~Equip();
 
 	void Init();
 	void Update(float deltaTime);
 	void UpdateRaknet();
 	void Render();
-	
-	void ToggleVisible()							{ mDragSprite.ToggleVisible(); }
+
+	void ToggleVisible() {
+		mDragSprite.ToggleVisible();
+	}
 
 private:
 	DragSprite mDragSprite;

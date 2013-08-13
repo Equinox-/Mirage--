@@ -2,7 +2,7 @@
 #define _HUD_H
 
 #include <SGE.h>
-#include "Eqiup.h"
+#include "Equip.h"
 #include "MiniMap.h"
 #include "DrawBar.h"
 #include "Inventory.h"
@@ -40,7 +40,7 @@ private:
 	DrawBar mEnemyHealth;
 	MiniMap mMiniMap;
 	Inventory mInventory;
-	Eqiup mEqiup;
+	Equip mEqiup;
 	PlayerInfo& mPlayerInfo;
 	Raknet& mRaknet;
 	Map& mMap;

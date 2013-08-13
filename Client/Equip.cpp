@@ -1,6 +1,6 @@
-#include "Eqiup.h"
+#include "Equip.h"
 
-Eqiup::Eqiup(Raknet& raknet, PlayerInfo& playerInfo, Inventory& inventory)
+Equip::Equip(Raknet& raknet, PlayerInfo& playerInfo, Inventory& inventory)
 :mDragSprite(SVector2(800.0f, 130.0f), false)
 ,mRaknet(raknet)
 ,mPlayerInfo(playerInfo)
@@ -10,12 +10,12 @@ Eqiup::Eqiup(Raknet& raknet, PlayerInfo& playerInfo, Inventory& inventory)
 
 }
 
-Eqiup::~Eqiup()
+Equip::~Equip()
 {
 
 }
 
-void Eqiup::Init()
+void Equip::Init()
 {
 	mDragSprite.Init("GUI/Ingame/Eqiupment.png");
 
@@ -37,7 +37,7 @@ void Eqiup::Init()
 	mFont.SetColor(139,123,139);
 }
 
-void Eqiup::Update(float deltaTime)
+void Equip::Update(float deltaTime)
 {
 	mDragSprite.Update(deltaTime);
 	mStats.Update(deltaTime);
@@ -63,7 +63,7 @@ void Eqiup::Update(float deltaTime)
 	}
 }
 
-void Eqiup::Render()
+void Equip::Render()
 {
 	if(mDragSprite.GetVisible())
 	{
@@ -189,7 +189,7 @@ void Eqiup::Render()
 	}
 }
 
-void Eqiup::UpdateRaknet()
+void Equip::UpdateRaknet()
 {
 	switch (mRaknet.mPacket->data[0])
 	{
