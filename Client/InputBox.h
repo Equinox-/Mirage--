@@ -5,7 +5,6 @@
 using namespace SGE;
 #include <string.h>
 #include <limits.h>
-#include <time.h>
 
 //=================================================================================================
 // Copyright 2013 Evan Davies																   	 //
@@ -57,7 +56,6 @@ private:
 	float mR, mG, mB;
 	float mSpacing;
 	bool mBold;
-	clock_t lastKeyTick;
 };
 
 #endif

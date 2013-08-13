@@ -1,8 +1,5 @@
 #include "InputBox.h"
 
-#define KEY_REPEAT_TIME 0.1
-#include <time.h>
-
 InputBox::InputBox(float x, float y, int width, int height, bool password, bool visible, float r, float g, float b, float spacing, bool bold, int maxLength)
 	:mPosition(x, y)
 	,mWidth(width)
@@ -17,7 +14,6 @@ InputBox::InputBox(float x, float y, int width, int height, bool password, bool 
 	,mB(b)
 	,mSpacing(spacing)
 	,mBold(bold)
-	,lastKeyTick(0)
 {
 	int length = maxLength + 1;
 	mText = new char[length];
@@ -52,12 +48,7 @@ void InputBox::Update(float deltaTime)
 	{
 		// Dont go over max length
 		if(mTextPosition < mMaxLength)
-		{
-			clock_t stime = clock();
-			// TODO improve
-			if (stime - lastKeyTick > KEY_REPEAT_TIME *(float)CLOCKS_PER_SEC) {
-				int startPos = mTextPosition;
-				if (Input_IsKeyDown(Keys::LSHIFT) || Input_IsKeyDown(Keys::RSHIFT) )
+		{		if (Input_IsKeyDown(Keys::LSHIFT) || Input_IsKeyDown(Keys::RSHIFT) )
 				{
 					if(Input_IsKeyPressed(Keys::A)) { mText[mTextPosition++] = 'A'; }
 					if(Input_IsKeyPressed(Keys::B)) { mText[mTextPosition++] = 'B'; }
@@ -157,10 +148,6 @@ void InputBox::Update(float deltaTime)
 				}
 
 				if(Input_IsKeyPressed(Keys::SPACE)) { mText[mTextPosition++] = ' '; }
-				if (startPos != mTextPosition) {
-					lastKeyTick = stime;
-				}
-			}
 		}
 
 		// Backspace
