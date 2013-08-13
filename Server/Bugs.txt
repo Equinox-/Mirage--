@@ -1,0 +1,2 @@
++ If a map layer has no tiles on it it crashes when reading. Look into Tiny XML Reading more.
++ X,Y positions getting switched somewhere in client

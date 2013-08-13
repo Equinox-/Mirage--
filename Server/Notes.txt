@@ -1,0 +1,1 @@
+CONNECTION_UPDATE in server must be lower then CONNECTION_TIMEOUT in client

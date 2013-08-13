@@ -1,0 +1,2 @@
+// Cache map data. Some code already set up for it in client. Just need to write and read file.
+// Load up Tile Size instead of just putting 32's everywhere

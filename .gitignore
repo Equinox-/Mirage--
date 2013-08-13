@@ -1,0 +1,29 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*~
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Other libraries
+Raknet/*
+FMOD/*
+*/Debug/*
+*/External/*
+
+Server/Accounts/*
+Server/Data/*
+Server/Items/*
+Server/Maps/*
+Server/NPCS/*
+*.rar
+Data/*
+*/Log.html
