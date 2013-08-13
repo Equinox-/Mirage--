@@ -1,4 +1,5 @@
 #include "InputBox.h"
+#define CARET_BLINK_RATE_SECONDS 0.4
 
 InputBox::InputBox(float x, float y, int width, int height, bool password, bool visible, float r, float g, float b, float spacing, bool bold, int maxLength)
 	:mPosition(x, y)
@@ -14,10 +15,13 @@ InputBox::InputBox(float x, float y, int width, int height, bool password, bool 
 	,mB(b)
 	,mSpacing(spacing)
 	,mBold(bold)
+	,mCaret(0.0)
 {
 	int length = maxLength + 1;
 	mText = new char[length];
+	mTempText = new char[length];
 	memset(mText, '\0', length);
+	memset(mTempText, '\0', length);
 }
 
 InputBox::~InputBox()
@@ -30,11 +34,22 @@ InputBox::~InputBox()
 		delete [] mText;
 		mText = NULL;
 	}
+	if(mTempText)
+	{
+		delete [] mTempText;
+		mTempText = NULL;
+	}
 }
 
 void InputBox::Update(float deltaTime)
 {
 	mSprite.Update(deltaTime);
+
+	// Update caret info
+	mCaret += deltaTime;
+	if (mCaret > CARET_BLINK_RATE_SECONDS) {
+		mCaret -= CARET_BLINK_RATE_SECONDS;
+	}
 
 	SVector2 mouse((float) Input_GetMouseScreenX(), (float) Input_GetMouseScreenY());
 	// If a mouse click is detected this box is no longer selected. Below it checks if it is the one being clicked on
@@ -165,16 +180,19 @@ void InputBox::Render()
 		mSprite.Render();
 	}
 
+	memset(mTempText, '\0', mMaxLength + 1);
+	if (mActive && mCaret > CARET_BLINK_RATE_SECONDS / 2.0) {
+		mTempText[mTextPosition] = '|';
+	}
 	if(!mIsPassword)
 	{
-		mFont.Print(mText, (int)(mPosition.x + mSpacing), (int)(mPosition.y + 2.0f));
+		memcpy(mTempText, mText, mTextPosition);
+		mFont.Print(mTempText, (int)(mPosition.x + mSpacing), (int)(mPosition.y + 2.0f));
 	}
 	else
 	{
-		char temp[CHAR_MAX];
-		memset(temp, '\n', CHAR_MAX);
-		memset(temp, '*', mTextPosition);
-		mFont.Print(temp, (int)(mPosition.x + mSpacing), (int)(mPosition.y + 2.0f));
+		memset(mTempText, '*', mTextPosition);
+		mFont.Print(mTempText, (int)(mPosition.x + mSpacing), (int)(mPosition.y + 2.0f));
 	}
 }
 

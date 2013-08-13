@@ -45,6 +45,7 @@ private:
 	int mHeight;
 	bool mActive;
 	char* mText;
+	char* mTempText;
 	int mTextPosition;
 	int mMaxLength;
 	bool mIsVisible;
@@ -56,6 +57,7 @@ private:
 	float mR, mG, mB;
 	float mSpacing;
 	bool mBold;
+	float mCaret;
 };
 
 #endif
