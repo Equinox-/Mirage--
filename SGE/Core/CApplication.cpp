@@ -49,61 +49,8 @@ void CApplication::Initialize(const char* pAppName, int hInstance,
 	mWinWidth = iWinWidth;
 	mWinHeight = iWinHeight;
 
-	/*if (CIniFile::Get()->GetBool("ExitButton", true)) {
-	 // Create a new window
-	 mWindow = CreateWindowExA(NULL,					   // Extended style
-	 pAppName,				   // Class name
-	 pAppName,				   // Window name
-	 WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_EX_TOPMOST,	// Style
-	 0, 0,					   // Position
-	 mWinWidth, mWinHeight,	// Dimensions
-	 NULL,					   // Handle to parent window
-	 NULL,					   // Handle to menu
-	 hInstance,				  // Handle to instance
-	 NULL						// Param
-	 );*/
 	mWindow = glutCreateWindow(pAppName);
-	/*} else {
-	 // Create a new window
-	 mWindow = CreateWindowExA(NULL,					   // Extended style
-	 pAppName,				   // Class name
-	 pAppName,				   // Window name
-	 WS_VISIBLE | WS_CAPTION | WS_EX_TOPMOST,			  // Style
-	 0, 0,					   // Position
-	 mWinWidth, mWinHeight,	// Dimensions
-	 NULL,					   // Handle to parent window
-	 NULL,					   // Handle to menu
-	 hInstance,				  // Handle to instance
-	 NULL						// Param
-	 );
-	 }*/
-
-	/*RECT clientRect;
-	 clientRect.left = 0;
-	 clientRect.top = 0;
-	 clientRect.right = mWinWidth;
-	 clientRect.bottom = mWinHeight;
-	 AdjustWindowRect(&clientRect, GetWindowLongPtr(mWindow, GWL_STYLE), FALSE);
-	 if (clientRect.left < 0) {
-	 int moveRight = -clientRect.left;
-	 clientRect.left += moveRight;
-	 clientRect.right += moveRight;
-	 }
-	 if (clientRect.top < 0) {
-	 int moveDown = -clientRect.top;
-	 clientRect.top += moveDown;
-	 clientRect.bottom += moveDown;
-	 }
-
-	 MoveWindow(mWindow, clientRect.left, clientRect.top, clientRect.right,
-	 clientRect.bottom, false);
-
-	 // Hide the cursor
-	 ShowCursor(false);
-
-	 // Show the window
-	 UpdateWindow(mWindow);
-	 ShowWindow(mWindow, SW_SHOWNORMAL);*/
+	glutSetCursor(GLUT_CURSOR_NONE);
 
 	// Do any additional initialization here
 	OnInitialize();
@@ -140,7 +87,6 @@ void CApplication::Run(void) {
 	glutIdleFunc(glutPostRedisplay);
 	while (!windowClosed) {
 		OnMainLoop();
-		glutMainLoopEvent();
 	}
 	printf("Window closed!\n");
 	//glutMainLoop();

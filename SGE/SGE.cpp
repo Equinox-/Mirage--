@@ -18,7 +18,7 @@
 // Includes
 //====================================================================================================
 
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include "Audio/Audio.h"
 #include "Core/Core.h"
 #include "Graphics/Graphics.h"
@@ -113,8 +113,11 @@ protected:
 			fSeconds = 0.0333f;
 		}
 
-		// Update input
+		// Swap input buffers
 		CDXInput::Get()->Update();
+
+		// Update input buffer
+		glutMainLoopEvent();
 
 		// Update sound
 		CFMOD::Get()->Update();

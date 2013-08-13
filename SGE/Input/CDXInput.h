@@ -13,8 +13,6 @@
 // Defines
 //====================================================================================================
 
-#define DIRECTINPUT_VERSION 0x0800
-
 //====================================================================================================
 // Includes
 //====================================================================================================
@@ -22,24 +20,21 @@
 //====================================================================================================
 // Class Declarations
 //====================================================================================================
-static int cdxInput_glutKeyToSGE(int glutKey);
-static int cdxInput_characterToSGE(char c);
-static void cdxInput_mouseMotion(int x, int y);
-static void cdxInput_mouseButton(int button, int state, int x, int y);
-static void cdxInput_keyPress(unsigned char c, int x, int y);
-static void cdxInput_keyRelease(unsigned char c, int x, int y);
-static void cdxInput_keyPressSpecial(int c, int x, int y);
-static void cdxInput_keyReleaseSpecial(int c, int x, int y);
 class CDXInput {
-	// Declare the game pad enumeration function as a friend
-	//friend BOOL CALLBACK EnumGamePadCallback(const DIDEVICEINSTANCE* pDIDeviceInstance, VOID* pContext);
 public:
+	static int cdxInput_glutKeyToSGE(int glutKey);
+	static int cdxInput_characterToSGE(char c);
+	static void cdxInput_mouseMotion(int x, int y);
+	static void cdxInput_mouseButton(int button, int state, int x, int y);
+	static void cdxInput_keyPress(unsigned char c, int x, int y);
+	static void cdxInput_keyRelease(unsigned char c, int x, int y);
+	static void cdxInput_keyPressSpecial(int c, int x, int y);
+	static void cdxInput_keyReleaseSpecial(int c, int x, int y);
 	// Accessor function for singleton instance
 	static CDXInput* Get(void);
 protected:
 	// Protected constructor for singleton
 	CDXInput(void);
-	bool requestedClose;
 public:
 	// Functions to startup/shutdown the input system
 	void Initialize(int hWindow);
@@ -83,7 +78,6 @@ public:
 	static const int kKeyBufferSize = 256;
 	char mCurrKeyBuffer[kKeyBufferSize]; // Buffer for current key states
 	void updateKeyModifiers();
-	void updateBuffers();
 private:
 	// Members
 	static CDXInput* s_Instance;			// Static instance for singleton

@@ -76,20 +76,16 @@ void CDXInput::Initialize(int hWindow) {
 	mInitialized = true;
 
 	glutSetWindow(hWindow);
-	glutPassiveMotionFunc(cdxInput_mouseMotion);
-	glutMotionFunc(cdxInput_mouseMotion);
-	glutMouseFunc(cdxInput_mouseButton);
-	glutKeyboardFunc(cdxInput_keyPress);
-	glutSpecialFunc(cdxInput_keyPressSpecial);
-	glutKeyboardUpFunc(cdxInput_keyRelease);
-	glutSpecialUpFunc(cdxInput_keyReleaseSpecial);
+	glutPassiveMotionFunc(CDXInput::cdxInput_mouseMotion);
+	glutMotionFunc(CDXInput::cdxInput_mouseMotion);
+	glutMouseFunc(CDXInput::cdxInput_mouseButton);
+	glutKeyboardFunc(CDXInput::cdxInput_keyPress);
+	glutSpecialFunc(CDXInput::cdxInput_keyPressSpecial);
+	glutKeyboardUpFunc(CDXInput::cdxInput_keyRelease);
+	glutSpecialUpFunc(CDXInput::cdxInput_keyReleaseSpecial);
 
 	// Write to log
 	CLog::Get()->Write(ELogMessageType_MESSAGE, "[Input] System initialized.");
-}
-
-void CDXInput::updateBuffers() {
-	mPrevMouseState = mCurrMouseState;
 }
 
 void CDXInput::updateKeyModifiers() {
@@ -119,7 +115,7 @@ void CDXInput::updateKeyModifiers() {
 	}
 }
 
-static int cdxInput_glutKeyToSGE(int key) {
+int CDXInput::cdxInput_glutKeyToSGE(int key) {
 	switch (key) {
 	case GLUT_KEY_F1:
 		return Keys::F1;
@@ -188,7 +184,7 @@ static int cdxInput_glutKeyToSGE(int key) {
 	return -1;
 }
 
-static int cdxInput_characterToSGE(char c) {
+int CDXInput::cdxInput_characterToSGE(char c) {
 	c = tolower(c);
 	if (c >= 'a' && c <= 'z') {
 		return c;
@@ -197,6 +193,10 @@ static int cdxInput_characterToSGE(char c) {
 		return c;
 	}
 	switch (c) {
+	case '\n':
+	case '\b':
+	case '\t':
+		return c;
 	case '-':
 	case '_':
 		return '-';
@@ -250,16 +250,15 @@ static int cdxInput_characterToSGE(char c) {
 	}
 	return -1;
 }
-static void cdxInput_mouseMotion(int x, int y) {
+
+void CDXInput::cdxInput_mouseMotion(int x, int y) {
 	CDXInput *in = CDXInput::Get();
-	in->updateBuffers();
 	in->mMouseX = x;
 	in->mMouseY = y;
 }
 
-static void cdxInput_mouseButton(int button, int state, int x, int y) {
+void CDXInput::cdxInput_mouseButton(int button, int state, int x, int y) {
 	CDXInput *in = CDXInput::Get();
-	in->updateBuffers();
 	in->mMouseX = x;
 	in->mMouseY = y;
 	int mask = 0;
@@ -281,7 +280,7 @@ static void cdxInput_mouseButton(int button, int state, int x, int y) {
 	}
 }
 
-static void cdxInput_keyPress(unsigned char c, int x, int y) {
+void CDXInput::cdxInput_keyPress(unsigned char c, int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateKeyModifiers();
 	int keyID = cdxInput_characterToSGE(c);
@@ -290,7 +289,7 @@ static void cdxInput_keyPress(unsigned char c, int x, int y) {
 	}
 }
 
-static void cdxInput_keyRelease(unsigned char c, int x, int y) {
+void CDXInput::cdxInput_keyRelease(unsigned char c, int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateKeyModifiers();
 	int keyID = cdxInput_characterToSGE(c);
@@ -299,7 +298,7 @@ static void cdxInput_keyRelease(unsigned char c, int x, int y) {
 	}
 }
 
-static void cdxInput_keyPressSpecial(int c, int x, int y) {
+void CDXInput::cdxInput_keyPressSpecial(int c, int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateKeyModifiers();
 	int key = cdxInput_glutKeyToSGE(c);
@@ -308,7 +307,7 @@ static void cdxInput_keyPressSpecial(int c, int x, int y) {
 	}
 }
 
-static void cdxInput_keyReleaseSpecial(int c, int x, int y) {
+void CDXInput::cdxInput_keyReleaseSpecial(int c, int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateKeyModifiers();
 	int key = cdxInput_glutKeyToSGE(c);
@@ -347,6 +346,10 @@ void CDXInput::Update(void) {
 				"[Input] Failed to update input devices. System not initialized.");
 		return;
 	}
+
+	// Update buffers
+	memcpy(mPrevKeyBuffer, mCurrKeyBuffer, kKeyBufferSize * sizeof(char));
+	mPrevMouseState = mCurrMouseState;
 }
 
 //----------------------------------------------------------------------------------------------------
