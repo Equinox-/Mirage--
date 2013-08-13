@@ -102,6 +102,9 @@ void CTimer::Update(void) {
 	// Calculate the elapsed time
 	mElapsedSeconds = static_cast<float>(mCurrentTick - mLastTick)
 			/ (float) CLOCKS_PER_SEC;
+	if (mElapsedSeconds < 0.0) {
+		mElapsedSeconds = 0.001;
+	}
 
 	// Update the last tick count
 	mLastTick = mCurrentTick;
