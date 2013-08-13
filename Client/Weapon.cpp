@@ -1,0 +1,68 @@
+#include "Weapon.h"
+
+Weapon::Weapon()
+:mStrBonus(0)
+,mDefBonus(0)
+,mDexBonus(0)
+,mIntBonus(0)
+,mAtkBonus(0)
+,mCritBonus(0)
+,mHealthBonus(0)
+,mManaBonus(0)
+,mDamage(0)
+,mSpeed(0)
+,mLevelReq(0)
+,mStrReq(0)
+,mDefReq(0)
+,mDexReq(0)
+,mIntReq(0)
+,mAtkReq(0)
+{
+
+}
+
+Weapon::~Weapon()
+{
+
+}
+
+void Weapon::Init()
+{
+
+}
+
+void Weapon::UseItem(PlayerInfo& playerInfo, Raknet& raknet)
+{
+	{
+		RakNet::BitStream bsOut;
+		bsOut.Write((RakNet::MessageID)ID_EQIUP_ITEM);
+		bsOut.Write(mItemNumber);
+		bsOut.Write(mImageNumber);
+		bsOut.Write(weapon);
+		raknet.mPeer->Send(&bsOut,HIGH_PRIORITY,RELIABLE_ORDERED,0,raknet.mServerAddress,false);
+	}
+
+	RemoveItem(raknet);
+}
+
+void Weapon::GetData(BitStream& bsIn)
+{
+	bsIn.Read(mStrBonus);
+	bsIn.Read(mDefBonus);
+	bsIn.Read(mDexBonus);
+	bsIn.Read(mDefBonus);
+	bsIn.Read(mDexBonus);
+	bsIn.Read(mIntBonus);
+	bsIn.Read(mAtkBonus);
+	bsIn.Read(mCritBonus);
+	bsIn.Read(mHealthBonus);
+	bsIn.Read(mManaBonus);
+	bsIn.Read(mDamage);
+	bsIn.Read(mSpeed);
+	bsIn.Read(mLevelReq);
+	bsIn.Read(mStrReq);
+	bsIn.Read(mDefReq);
+	bsIn.Read(mDexReq);
+	bsIn.Read(mIntReq);
+	bsIn.Read(mAtkReq);
+}
