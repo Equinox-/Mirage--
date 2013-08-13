@@ -119,6 +119,137 @@ void CDXInput::updateKeyModifiers() {
 	}
 }
 
+static int cdxInput_glutKeyToSGE(int key) {
+	switch (key) {
+	case GLUT_KEY_F1:
+		return Keys::F1;
+		break;
+	case GLUT_KEY_F2:
+		return Keys::F2;
+		break;
+	case GLUT_KEY_F3:
+		return Keys::F3;
+		break;
+	case GLUT_KEY_F4:
+		return Keys::F4;
+		break;
+	case GLUT_KEY_F5:
+		return Keys::F5;
+		break;
+	case GLUT_KEY_F6:
+		return Keys::F6;
+		break;
+	case GLUT_KEY_F7:
+		return Keys::F7;
+		break;
+	case GLUT_KEY_F8:
+		return Keys::F8;
+		break;
+	case GLUT_KEY_F9:
+		return Keys::F9;
+		break;
+	case GLUT_KEY_F10:
+		return Keys::F10;
+		break;
+	case GLUT_KEY_F11:
+		return Keys::F11;
+		break;
+	case GLUT_KEY_F12:
+		return Keys::F12;
+		break;
+	case GLUT_KEY_LEFT:
+		return Keys::LEFT;
+		break;
+	case GLUT_KEY_UP:
+		return Keys::UP;
+		break;
+	case GLUT_KEY_RIGHT:
+		return Keys::RIGHT;
+		break;
+	case GLUT_KEY_DOWN:
+		return Keys::DOWN;
+		break;
+	case GLUT_KEY_PAGE_UP:
+		return Keys::PGUP;
+		break;
+	case GLUT_KEY_PAGE_DOWN:
+		return Keys::PGDN;
+		break;
+	case GLUT_KEY_HOME:
+		return Keys::HOME;
+		break;
+	case GLUT_KEY_END:
+		return Keys::END;
+		break;
+	case GLUT_KEY_INSERT:
+		return Keys::INS;
+		break;
+	}
+	return -1;
+}
+
+static int cdxInput_characterToSGE(char c) {
+	c = tolower(c);
+	if (c >= 'a' && c <= 'z') {
+		return c;
+	}
+	if (c >= '0' && c <= '9') {
+		return c;
+	}
+	switch (c) {
+	case '-':
+	case '_':
+		return '-';
+	case '=':
+	case '+':
+		return '=';
+	case '[':
+	case '{':
+		return '[';
+	case ']':
+	case '}':
+		return ']';
+	case ':':
+	case ';':
+		return ';';
+	case '"':
+	case '\'':
+		return '\'';
+	case '<':
+	case ',':
+		return ',';
+	case '>':
+	case '.':
+		return '.';
+	case '?':
+	case '/':
+		return '/';
+	case '~':
+	case '`':
+		return '`';
+	case '!':
+		return '1';
+	case '@':
+		return '2';
+	case '#':
+		return '3';
+	case '$':
+		return '4';
+	case '%':
+		return '5';
+	case '^':
+		return '6';
+	case '&':
+		return '7';
+	case '*':
+		return '8';
+	case '(':
+		return '9';
+	case ')':
+		return '0';
+	}
+	return -1;
+}
 static void cdxInput_mouseMotion(int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateBuffers();
@@ -153,160 +284,42 @@ static void cdxInput_mouseButton(int button, int state, int x, int y) {
 static void cdxInput_keyPress(unsigned char c, int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateKeyModifiers();
-	in->mCurrKeyBuffer[tolower(c)] = 0x80;
+	int keyID = cdxInput_characterToSGE(c);
+	if (keyID > 0) {
+		in->mCurrKeyBuffer[keyID] = 0x80;
+	}
 }
 
 static void cdxInput_keyRelease(unsigned char c, int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateKeyModifiers();
-	in->mCurrKeyBuffer[tolower(c)] = 0;
+	int keyID = cdxInput_characterToSGE(c);
+	if (keyID > 0) {
+		in->mCurrKeyBuffer[keyID] = 0;
+	}
 }
 
 static void cdxInput_keyPressSpecial(int c, int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateKeyModifiers();
-	const int val = 0x80;
-	switch (c) {
-	case GLUT_KEY_F1:
-		in->mCurrKeyBuffer[Keys::F1] = val;
-		break;
-	case GLUT_KEY_F2:
-		in->mCurrKeyBuffer[Keys::F2] = val;
-		break;
-	case GLUT_KEY_F3:
-		in->mCurrKeyBuffer[Keys::F3] = val;
-		break;
-	case GLUT_KEY_F4:
-		in->mCurrKeyBuffer[Keys::F4] = val;
-		break;
-	case GLUT_KEY_F5:
-		in->mCurrKeyBuffer[Keys::F5] = val;
-		break;
-	case GLUT_KEY_F6:
-		in->mCurrKeyBuffer[Keys::F6] = val;
-		break;
-	case GLUT_KEY_F7:
-		in->mCurrKeyBuffer[Keys::F7] = val;
-		break;
-	case GLUT_KEY_F8:
-		in->mCurrKeyBuffer[Keys::F8] = val;
-		break;
-	case GLUT_KEY_F9:
-		in->mCurrKeyBuffer[Keys::F9] = val;
-		break;
-	case GLUT_KEY_F10:
-		in->mCurrKeyBuffer[Keys::F10] = val;
-		break;
-	case GLUT_KEY_F11:
-		in->mCurrKeyBuffer[Keys::F11] = val;
-		break;
-	case GLUT_KEY_F12:
-		in->mCurrKeyBuffer[Keys::F12] = val;
-		break;
-	case GLUT_KEY_LEFT:
-		in->mCurrKeyBuffer[Keys::LEFT] = val;
-		break;
-	case GLUT_KEY_UP:
-		in->mCurrKeyBuffer[Keys::UP] = val;
-		break;
-	case GLUT_KEY_RIGHT:
-		in->mCurrKeyBuffer[Keys::RIGHT] = val;
-		break;
-	case GLUT_KEY_DOWN:
-		in->mCurrKeyBuffer[Keys::DOWN] = val;
-		break;
-	case GLUT_KEY_PAGE_UP:
-		in->mCurrKeyBuffer[Keys::PGUP] = val;
-		break;
-	case GLUT_KEY_PAGE_DOWN:
-		in->mCurrKeyBuffer[Keys::PGDN] = val;
-		break;
-	case GLUT_KEY_HOME:
-		in->mCurrKeyBuffer[Keys::HOME] = val;
-		break;
-	case GLUT_KEY_END:
-		in->mCurrKeyBuffer[Keys::END] = val;
-		break;
-	case GLUT_KEY_INSERT:
-		in->mCurrKeyBuffer[Keys::INS] = val;
-		break;
+	int key = cdxInput_glutKeyToSGE(c);
+	if (key >= 0) {
+		in->mCurrKeyBuffer[key] = 0x80;
 	}
 }
 
 static void cdxInput_keyReleaseSpecial(int c, int x, int y) {
 	CDXInput *in = CDXInput::Get();
 	in->updateKeyModifiers();
-	const int val = 0;
-	switch (c) {
-	case GLUT_KEY_F1:
-		in->mCurrKeyBuffer[Keys::F1] = val;
-		break;
-	case GLUT_KEY_F2:
-		in->mCurrKeyBuffer[Keys::F2] = val;
-		break;
-	case GLUT_KEY_F3:
-		in->mCurrKeyBuffer[Keys::F3] = val;
-		break;
-	case GLUT_KEY_F4:
-		in->mCurrKeyBuffer[Keys::F4] = val;
-		break;
-	case GLUT_KEY_F5:
-		in->mCurrKeyBuffer[Keys::F5] = val;
-		break;
-	case GLUT_KEY_F6:
-		in->mCurrKeyBuffer[Keys::F6] = val;
-		break;
-	case GLUT_KEY_F7:
-		in->mCurrKeyBuffer[Keys::F7] = val;
-		break;
-	case GLUT_KEY_F8:
-		in->mCurrKeyBuffer[Keys::F8] = val;
-		break;
-	case GLUT_KEY_F9:
-		in->mCurrKeyBuffer[Keys::F9] = val;
-		break;
-	case GLUT_KEY_F10:
-		in->mCurrKeyBuffer[Keys::F10] = val;
-		break;
-	case GLUT_KEY_F11:
-		in->mCurrKeyBuffer[Keys::F11] = val;
-		break;
-	case GLUT_KEY_F12:
-		in->mCurrKeyBuffer[Keys::F12] = val;
-		break;
-	case GLUT_KEY_LEFT:
-		in->mCurrKeyBuffer[Keys::LEFT] = val;
-		break;
-	case GLUT_KEY_UP:
-		in->mCurrKeyBuffer[Keys::UP] = val;
-		break;
-	case GLUT_KEY_RIGHT:
-		in->mCurrKeyBuffer[Keys::RIGHT] = val;
-		break;
-	case GLUT_KEY_DOWN:
-		in->mCurrKeyBuffer[Keys::DOWN] = val;
-		break;
-	case GLUT_KEY_PAGE_UP:
-		in->mCurrKeyBuffer[Keys::PGUP] = val;
-		break;
-	case GLUT_KEY_PAGE_DOWN:
-		in->mCurrKeyBuffer[Keys::PGDN] = val;
-		break;
-	case GLUT_KEY_HOME:
-		in->mCurrKeyBuffer[Keys::HOME] = val;
-		break;
-	case GLUT_KEY_END:
-		in->mCurrKeyBuffer[Keys::END] = val;
-		break;
-	case GLUT_KEY_INSERT:
-		in->mCurrKeyBuffer[Keys::INS] = val;
-		break;
+	int key = cdxInput_glutKeyToSGE(c);
+	if (key >= 0) {
+		in->mCurrKeyBuffer[key] = 0;
 	}
 }
 //----------------------------------------------------------------------------------------------------
 
 void CDXInput::Terminate(void) {
-	// Check if we have already terminated the system
+// Check if we have already terminated the system
 	if (!mInitialized) {
 		// Write to log
 		CLog::Get()->Write(ELogMessageType_WARNING,
@@ -314,20 +327,20 @@ void CDXInput::Terminate(void) {
 		return;
 	}
 
-	// Write to log
+// Write to log
 	CLog::Get()->Write(ELogMessageType_MESSAGE, "[Input] Terminating...");
 
-	// Set flag
+// Set flag
 	mInitialized = false;
 
-	// Write to log
+// Write to log
 	CLog::Get()->Write(ELogMessageType_MESSAGE, "[Input] System terminated");
 }
 
 //----------------------------------------------------------------------------------------------------
 
 void CDXInput::Update(void) {
-	// Check if the system is initialized
+// Check if the system is initialized
 	if (!mInitialized) {
 		// Write to log
 		CLog::Get()->Write(ELogMessageType_ERROR,

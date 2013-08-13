@@ -22,6 +22,8 @@
 //====================================================================================================
 // Class Declarations
 //====================================================================================================
+static int cdxInput_glutKeyToSGE(int glutKey);
+static int cdxInput_characterToSGE(char c);
 static void cdxInput_mouseMotion(int x, int y);
 static void cdxInput_mouseButton(int button, int state, int x, int y);
 static void cdxInput_keyPress(unsigned char c, int x, int y);
