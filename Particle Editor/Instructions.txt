@@ -1,0 +1,22 @@
+[EMITTER_DATA]
+TextureName:	heart.png
+MaxBufferSize:	1000
+Region:		-20, -20, 20, 20
+Direction:	0, -1
+Span:		180
+Speed:		10, 50
+Lifetime:	5.4
+Scale:		0.2, 0.5
+StartColor:	255, 0, 0
+EndColor:	0, 0, 255
+
+Texture Name: The name of the file you want your particle to be made of. If you just want a general particle use explosion.png its a pixel
+MaxBufferSize: Max amount of particles on the screen at one time
+Region: How big is your effect?
+Direction: Left Right, Up Down: 0 no direction. 1 Left -1 Right. 1 up -1 down
+Span: Range to move in 180. FOr example 30 would be a 30 degree radius spread point
+Speed: Particle speed, start speed end speed
+Lifetime: How long your particles stay alive. If you dont notice color changes increase this.
+Scale: Size Starting size - Ending Size - Particles will grow
+StartColor: Color your particle starts at will fade to end color
+EndColor: Color your particle ends at
