@@ -189,6 +189,8 @@ int CDXInput::cdxInput_characterToSGE(char c) {
 	}
 	switch (c) {
 	case '\n':
+	case '\r':
+		return '\n';
 	case '\b':
 	case '\t':
 		return c;
