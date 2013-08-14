@@ -119,7 +119,7 @@ void CSprite::Render(void) {
 	glTranslatef(-vecRotationCenter.x, -vecRotationCenter.y, 0.0);
 
 	glBegin(GL_QUADS);
-	glColor3f(1.0, 1.0, 1.0);
+	mColor.bind();
 	glTexCoord2f(0.0, 1.0);
 	glVertex2f(0.0, 0.0);
 	glTexCoord2f(1.0, 1.0);
