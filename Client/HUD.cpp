@@ -24,7 +24,7 @@ void HUD::Init() {
 
 	mHealthBar.Init(78, 26.5f, "HealthBar.png");
 	mManaBar.Init(80, 53, "ManaBar.png");
-	mEnemyHealth.Init(777, 40, "HealthBar.png");
+	mEnemyHealth.Init(SGE::Graphics_WindowWidth() - 823, 40, "HealthBar.png");
 
 	mBars.Load("GUI/Ingame/Health1.png");
 	mCharWindow.Load("GUI/Ingame/Health.png");
@@ -33,9 +33,10 @@ void HUD::Init() {
 	mEnemyHUD2.Load("GUI/Ingame/EnemyHUD1.png");
 	mBars.SetPosition(65, 16);
 	mCharWindow.SetPosition(5, 5);
-	mSkills.SetPosition(975, 805);
-	mEnemyHUD.SetPosition(700, 5);
-	mEnemyHUD2.SetPosition(759, 30);
+	mSkills.SetPosition(SGE::Graphics_WindowWidth() - 625,
+			SGE::Graphics_WindowHeight() - 95);
+	mEnemyHUD.SetPosition(SGE::Graphics_WindowWidth() - 900, 5);
+	mEnemyHUD2.SetPosition(SGE::Graphics_WindowWidth() - 841, 30);
 }
 
 void HUD::InitEqiup() {
@@ -66,13 +67,19 @@ void HUD::Update(float deltaTime) {
 	// Toggle visibility
 	if (!chatting) {
 		if (Input_IsKeyPressed(Keys::I)
-				|| ((x > 1510) && (x < 1542) && (y > 831) && (y < 870)
+				|| ((x > SGE::Graphics_WindowWidth() - 90)
+						&& (x < SGE::Graphics_WindowWidth() - 38)
+						&& (y > SGE::Graphics_WindowHeight() - 69)
+						&& (y < SGE::Graphics_WindowHeight() - 30)
 						&& Input_IsMousePressed(Mouse::LBUTTON))) {
 			mInventory.ToggleVisible();
 		}
 
 		if (Input_IsKeyPressed(Keys::C)
-				|| ((x > 1542) && (x < 1580) && (y > 831) && (y < 870)
+				|| ((x > SGE::Graphics_WindowWidth() - 58)
+						&& (x < SGE::Graphics_WindowWidth() - 20)
+						&& (y > SGE::Graphics_WindowHeight() - 69)
+						&& (y < SGE::Graphics_WindowHeight() - 30)
 						&& Input_IsMousePressed(Mouse::LBUTTON))) {
 			mEqiup.ToggleVisible();
 		}
@@ -100,9 +107,9 @@ void HUD::Render() {
 
 	char temp[CHAR_MAX];
 	sprintf(temp, "Mouse X: %d", x);
-	Graphics_DebugText(temp, 1200, 25, 0XFF0000);
+	Graphics_DebugText(temp, SGE::Graphics_WindowWidth() - 400, 25, 0XFF0000);
 	sprintf(temp, "Mouse Y: %d", y);
-	Graphics_DebugText(temp, 1200, 50, 0XFF0000);
+	Graphics_DebugText(temp, SGE::Graphics_WindowWidth() - 400, 50, 0XFF0000);
 }
 
 void HUD::UpdateRaknet() {

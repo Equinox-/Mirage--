@@ -15,7 +15,7 @@
 #include "../GLUtil/Math/Vector2f.h"
 #include "../GLUtil/Math/Rectangle.h"
 #include "../GLUtil/GLColor.h"
-#include "../GLUtil/GLFont.h"
+#include "../Graphics/CFont.h"
 #include "../GLUtil/Math/MathConstants.h"
 #include <math.h>
 
@@ -64,7 +64,7 @@ struct SText {
 // Statics
 //====================================================================================================
 
-static GLFont* s_pFont = NULL;
+static CFont* s_pFont = NULL;
 
 static bool s_Initialized = false;
 
@@ -94,7 +94,8 @@ void Initialize(float fLineWidth) {
 	//D3DXCreateFontA(CDXGraphics::Get()->D3DDevice(), 24, 0, 500, 1, 0,
 	//		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY,
 	//		DEFAULT_PITCH | FF_DONTCARE, "Impact", &s_pFont);
-	s_pFont = new GLFont(0, 16, 16, "font.png", false);
+	s_pFont = new CFont();
+	s_pFont->Create(FontType::ARIAL, 16);
 
 	// Set flag
 	s_Initialized = true;
@@ -110,7 +111,7 @@ void Terminate(void) {
 
 	// Release everything
 	if (NULL != s_pFont) {
-		s_pFont->dispose();
+		s_pFont->Destroy();
 		s_pFont = NULL;
 	}
 	//if (NULL != s_pLineRenderer) {
@@ -217,8 +218,8 @@ void Render(void) {
 	}
 
 	// Begin render
-	glLineWidth (f_LineWidth_Debug);
-	glBegin (GL_LINES);	//s_pLineRenderer->Begin();
+	glLineWidth(f_LineWidth_Debug);
+	glBegin(GL_LINES);	//s_pLineRenderer->Begin();
 
 	// Draw all the shapes
 	for (int i = 0; i < s_LineIndex; ++i) {
@@ -235,16 +236,11 @@ void Render(void) {
 
 	// Draw text
 	for (int i = 0; i < s_TextIndex; ++i) {
-		Rectangle rect = Rectangle();
-		rect.left = (int) s_TextList[i].pos.x;
-		rect.top = (int) s_TextList[i].pos.y;
-		rect.right = rect.left + 1000;
-		rect.bottom = rect.top + 24;
 		GLColor color = s_TextList[i].rgb | 0xFF000000;
 		//s_pFont->DrawTextA(NULL, s_TextList[i].text.c_str(), -1, &rect, 0,
 		//		color);
-		color.bind();
-		s_pFont->render(s_TextList[i].text.c_str(), rect);
+		s_pFont->PrintText(s_TextList[i].text.c_str(), s_TextList[i].pos.x,
+				s_TextList[i].pos.y);
 	}
 
 	// Reset index

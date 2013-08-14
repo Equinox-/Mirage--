@@ -56,6 +56,10 @@ void Graphics_DebugCircle(const SCircle& rCircle, unsigned int rgb = 0xFFFFFF);
 void Graphics_DebugText(const char* pText, const SVector2& vPosition, unsigned int rgb = 0xFFFFFF);
 void Graphics_DebugText(const char* pText, float x, float y, unsigned int rgb = 0xFFFFFF);
 
+// Window Functions
+int Graphics_WindowWidth();
+int Graphics_WindowHeight();
+
 // Keyboard Functions
 bool Input_IsKeyDown(int iKey);
 bool Input_IsKeyPressed(int iKey);

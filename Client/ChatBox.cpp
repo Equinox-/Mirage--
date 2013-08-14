@@ -1,6 +1,6 @@
 #include "ChatBox.h"
 ChatBox::ChatBox(Raknet& raknet) :
-		mInput(25, 843, 150, 25, false, false, 255, 255, 255, 35, true), mChatSelected(
+		mInput(25, SGE::Graphics_WindowHeight()-57, 150, 25, false, false, 255, 255, 255, 35, true), mChatSelected(
 				false), mChatBoxLines(6), mRaknet(raknet), mInit(false) {
 
 }
@@ -16,7 +16,7 @@ void ChatBox::Init(int usernameLength) {
 
 	mSprite.Load("ChatBox.png");
 	mCursor.Load("ChatLine.png");
-	mSprite.SetPosition(10, 655);
+	mSprite.SetPosition(10, SGE::Graphics_WindowHeight() - 245);
 	//mSprite.SetAlpha(215);
 
 	mInput.SetMaxLength(45 - usernameLength);
@@ -56,7 +56,7 @@ void ChatBox::Update(float deltaTime) {
 void ChatBox::Render() {
 	if (mInit) {
 		mSprite.Render();
-		int position = 835;
+		int position = SGE::Graphics_WindowHeight() - 65;
 		int count = 0;
 
 		// Display the chat messages
