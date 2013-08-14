@@ -84,7 +84,6 @@ void CApplication::Run(void) {
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,
 			GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutCloseFunc(glutClosing);
-	glutIdleFunc(glutPostRedisplay);
 	while (!windowClosed) {
 		OnMainLoop();
 	}
