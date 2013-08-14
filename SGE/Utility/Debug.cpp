@@ -18,7 +18,9 @@
 #include "../Graphics/CFont.h"
 #include "../GLUtil/Math/MathConstants.h"
 #include <math.h>
+#include <time.h>
 
+#define SHOW_USAGE_GRAPHIC 2
 //====================================================================================================
 // Namespace
 //====================================================================================================
@@ -60,6 +62,14 @@ struct SText {
 	}
 };
 
+struct SUsageNode {
+	std::string name;
+	float time;
+	clock_t startTick;
+	SUsageNode *parent;
+	std::vector<SUsageNode*> children;
+};
+
 //====================================================================================================
 // Statics
 //====================================================================================================
@@ -79,9 +89,43 @@ static SText s_TextList[c_MaxText];
 static int s_TextIndex = 0;
 static float f_LineWidth_Debug = 1.0;
 
+static char* sUsageBuff;
+
+static SUsageNode *rootNode;
+static SUsageNode *activeNode;
+
 //====================================================================================================
 // Function Definitions
 //====================================================================================================
+void clearUsageNode(SUsageNode *node) {
+	for (size_t i = 0; i < node->children.size(); ++i) {
+		clearUsageNode(node->children[i]);
+	}
+	delete node;
+}
+void initUsageTree() {
+	rootNode = new SUsageNode();
+	activeNode = rootNode;
+	rootNode->time = 1000.0;
+}
+float drawUsageNode(SUsageNode *node, float x, float y) {
+	sprintf(sUsageBuff, "%s: %f", node->name.c_str(), node->time);
+	if (node->parent != NULL && node->parent->time >= 0.0
+			&& node->parent != rootNode) {
+		int percent = (int) (node->time / node->parent->time * 100.0);
+		if (percent > 0 && percent <= 100) {
+			sprintf(sUsageBuff, "%s: %d%% %f", node->name.c_str(), percent,
+					node->time);
+		}
+	}
+	sUsageBuff[49] = '\0';
+	s_pFont->PrintText(sUsageBuff, x, y);
+	y += 20.0;
+	for (size_t i = 0; i < node->children.size(); ++i) {
+		y = drawUsageNode(node->children[i], x + 10, y);
+	}
+	return y;
+}
 
 void Initialize(float fLineWidth) {
 	// Check if we have initialized
@@ -96,6 +140,11 @@ void Initialize(float fLineWidth) {
 	//		DEFAULT_PITCH | FF_DONTCARE, "Impact", &s_pFont);
 	s_pFont = new CFont();
 	s_pFont->Create(FontType::ARIAL, 16);
+
+#if SHOW_USAGE_GRAPHIC
+	sUsageBuff = new char[50];
+	initUsageTree();
+#endif
 
 	// Set flag
 	s_Initialized = true;
@@ -120,6 +169,7 @@ void Terminate(void) {
 	//}
 
 	// Set flag
+	delete[] sUsageBuff;
 	s_Initialized = false;
 }
 
@@ -210,7 +260,6 @@ void AddScreenText(const char* text, float x, float y, GLColor rgb) {
 }
 
 //----------------------------------------------------------------------------------------------------
-
 void Render(void) {
 	// Check if we have initialized
 	if (!s_Initialized) {
@@ -246,6 +295,35 @@ void Render(void) {
 	// Reset index
 	s_LineIndex = 0;
 	s_TextIndex = 0;
+
+#if SHOW_USAGE_GRAPHIC
+	// Just 1 layer
+	float x = 200.0;
+	float y = 25.0;
+	for (size_t i = 0; i < rootNode->children.size(); ++i) {
+		y = drawUsageNode(rootNode->children[i], x, y);
+	}
+	clearUsageNode(rootNode);
+	initUsageTree();
+#endif
+}
+
+void UsageBegin(const char* name) {
+#if SHOW_USAGE_GRAPHIC
+	SUsageNode *node = new SUsageNode();
+	activeNode->children.push_back(node);
+	node->parent = activeNode;
+	node->name = name;
+	node->startTick = clock();
+	activeNode = node;
+#endif
+}
+void UsageEnd() {
+#if SHOW_USAGE_GRAPHIC
+	activeNode->time = (float) (clock() - activeNode->startTick)
+			/ (float) CLOCKS_PER_SEC;
+	activeNode = activeNode->parent;
+#endif
 }
 
 } // namespace Debug

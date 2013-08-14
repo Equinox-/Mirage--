@@ -55,6 +55,8 @@ void Graphics_DebugCircle(const SVector2& vCenter, float fRadius, unsigned int r
 void Graphics_DebugCircle(const SCircle& rCircle, unsigned int rgb = 0xFFFFFF);
 void Graphics_DebugText(const char* pText, const SVector2& vPosition, unsigned int rgb = 0xFFFFFF);
 void Graphics_DebugText(const char* pText, float x, float y, unsigned int rgb = 0xFFFFFF);
+void Graphics_DebugUsageBegin(const char* name);
+void Graphics_DebugUsageEnd();
 
 // Window Functions
 int Graphics_WindowWidth();

@@ -62,11 +62,17 @@ int GamePlay::Update(float deltaTime) {
 	}
 
 	UpdateRaknet(deltaTime);
-	mChatBox->Update(deltaTime);
+
+	SGE::Graphics_DebugUsageBegin("Map Update");
 	mMap.Update(deltaTime);
 	mCharacter.Update(deltaTime);
 	mOtherPlayers.Update(deltaTime);
+	SGE::Graphics_DebugUsageEnd();
+
+	SGE::Graphics_DebugUsageBegin("HUD Update");
+	mChatBox->Update(deltaTime);
 	mHUD->Update(deltaTime);
+	SGE::Graphics_DebugUsageEnd();
 
 	// Check for item pickup
 	if (Input_IsKeyPressed(Keys::ENTER)) {
@@ -91,16 +97,16 @@ int GamePlay::Update(float deltaTime) {
 //		int result = MessageBoxA(NULL, "Are you sure you want to logout?", "Confirm", MB_YESNO);
 //		ShowCursor(false);
 		/* TODO if (1) //result == IDYES)
-		{
-			// Update our position before we leave
-			BitStream bsOut;
-			bsOut.Write((RakNet::MessageID) ID_UPDATE_POSITION);
-			bsOut.Write(mCharacter.GetPosition());
-			mRaknet.mPeer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-					mRaknet.mServerAddress, false);
+		 {
+		 // Update our position before we leave
+		 BitStream bsOut;
+		 bsOut.Write((RakNet::MessageID) ID_UPDATE_POSITION);
+		 bsOut.Write(mCharacter.GetPosition());
+		 mRaknet.mPeer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
+		 mRaknet.mServerAddress, false);
 
-			nextState = GameState::Quit;
-		}*/
+		 nextState = GameState::Quit;
+		 }*/
 	}
 
 	return nextState;
@@ -117,9 +123,14 @@ void GamePlay::Render() {
 	offset.y = (mScreenHeight * 0.5f) - kTarget.y;
 	offset.y = Clamp(offset.y, mScreenHeight - kMapHeight, 0.0f);
 
+	SGE::Graphics_DebugUsageBegin("MapRender");
 	mMap.Render(offset, mOtherPlayers);
+	SGE::Graphics_DebugUsageEnd();
+
+	SGE::Graphics_DebugUsageBegin("HUDRender");
 	mChatBox->Render();
 	mHUD->Render();
+	SGE::Graphics_DebugUsageEnd();
 
 #if _DEBUG
 	char temp[CHAR_MAX];

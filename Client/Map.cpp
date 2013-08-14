@@ -133,6 +133,7 @@ void Map::Render(const SVector2& offset, OtherPlayers& otherPlayers) {
 
 	int tiles = mMapData.GetTileAmount();
 
+	SGE::Graphics_DebugUsageBegin("Ground");
 	// Render Ground
 	for (int a = 0; a < tiles; ++a) {
 		GroundTile* pTile = &mMapData.mLayer1[a];
@@ -143,6 +144,9 @@ void Map::Render(const SVector2& offset, OtherPlayers& otherPlayers) {
 			mSprites[type].Render();
 		}
 	}
+
+	SGE::Graphics_DebugUsageEnd();
+	SGE::Graphics_DebugUsageBegin("MaskItems");
 
 	// Render Mask
 	for (int a = 0; a < tiles; ++a) {
@@ -166,16 +170,25 @@ void Map::Render(const SVector2& offset, OtherPlayers& otherPlayers) {
 		}
 	}
 
+	SGE::Graphics_DebugUsageEnd();
+	SGE::Graphics_DebugUsageBegin("NPCs");
+
 	// Render NPCS
 	for (int a = 0; a < mNumberOfNPCS; ++a) {
 		mNPCS[a]->Render(offset);
 	}
+
+	SGE::Graphics_DebugUsageEnd();
+	SGE::Graphics_DebugUsageBegin("Players");
 
 	// Render Character
 	mCharacter.Render(offset);
 
 	// Render other players
 	otherPlayers.Render(offset);
+
+	SGE::Graphics_DebugUsageEnd();
+	SGE::Graphics_DebugUsageBegin("Extras");
 
 	// Render Extra
 	for (int a = 0; a < tiles; ++a) {
@@ -185,6 +198,9 @@ void Map::Render(const SVector2& offset, OtherPlayers& otherPlayers) {
 		mSprites[type].Render();
 	}
 
+	SGE::Graphics_DebugUsageEnd();
+	SGE::Graphics_DebugUsageBegin("Fringe");
+
 	// Render Fringe
 	for (int a = 0; a < tiles; ++a) {
 		SVector2 pos = mMapData.mLayer4[a].GetPosition();
@@ -193,8 +209,13 @@ void Map::Render(const SVector2& offset, OtherPlayers& otherPlayers) {
 		mSprites[type].Render();
 	}
 
+	SGE::Graphics_DebugUsageEnd();
+	SGE::Graphics_DebugUsageBegin("WeatherPaths");
+
 	mWeather.Render(offset);
 	mPathFinding.Render(offset);
+
+	SGE::Graphics_DebugUsageEnd();
 }
 
 void Map::Unload() {

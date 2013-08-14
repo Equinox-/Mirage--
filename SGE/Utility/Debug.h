@@ -30,6 +30,9 @@ void AddScreenRect(float x, float y, float w, float h, GLColor rgb = GLColor());
 void AddScreenCircle(float x, float y, float r, GLColor rgb = GLColor());
 void AddScreenText(const char* text, float x, float y, GLColor rgb = GLColor());
 
+void UsageBegin(const char* name);
+void UsageEnd();
+
 // Function to actually render all the geometry
 void Render(void);
 

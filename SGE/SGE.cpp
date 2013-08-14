@@ -101,6 +101,7 @@ protected:
 
 	// Game execution logic
 	virtual void OnMainLoop(void) {
+		SGE::Graphics_DebugUsageBegin("CoreUpdate");
 		// Update timer
 		CTimer::Get()->Update();
 		float fSeconds = CTimer::Get()->GetElapsedSeconds();
@@ -117,6 +118,9 @@ protected:
 		// Update sound
 		CFMOD::Get()->Update();
 
+		SGE::Graphics_DebugUsageEnd();
+		SGE::Graphics_DebugUsageBegin("UserUpdate");
+
 		// User update logic
 		if (SGE_Update(fSeconds)) {
 			Quit();
@@ -129,8 +133,13 @@ protected:
 		// Begin sprite rendering
 		CSpriteRenderer::Get()->BeginRender();
 
+		SGE::Graphics_DebugUsageEnd();
+		SGE::Graphics_DebugUsageBegin("UserRender");
+
 		// User render logic
 		SGE_Render();
+
+		SGE::Graphics_DebugUsageEnd();
 
 		// Render FPS
 		const bool bFPS = CIniFile::Get()->GetBool("FPS", false);
@@ -287,6 +296,14 @@ SVector2 RandomVector2(const SVector2& vLower, const SVector2& vUpper) {
 void Graphics_DebugLine(const SVector2& vStart, const SVector2& vEnd,
 		unsigned int rgb) {
 	Debug::AddScreenLine(vStart.x, vStart.y, vEnd.x, vEnd.y, rgb);
+}
+
+void Graphics_DebugUsageBegin(const char *name) {
+	Debug::UsageBegin(name);
+}
+
+void Graphics_DebugUsageEnd() {
+	Debug::UsageEnd();
 }
 
 //----------------------------------------------------------------------------------------------------
