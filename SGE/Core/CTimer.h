@@ -14,6 +14,9 @@
 //====================================================================================================
 
 #include <time.h>
+#if __linux
+#include <sys/time.h>
+#endif
 
 //====================================================================================================
 // Class Declarations
@@ -39,6 +42,7 @@ public:
 	// Function to get the frame per second
 	float GetFPS(void) const;
 
+	float GetCurrentTick();
 protected:
 	// Protected constructor for singleton
 	CTimer(void);
@@ -48,8 +52,14 @@ private:
 
 	// http://msdn2.microsoft.com/en-us/library/aa383713.aspx
 	//LARGE_INTEGER   mTicksPerSecond;   // System clock frequency
+#if __linux
+	timeval mLastTick;
+	timeval mCurrentTick;
+	timeval mInitTick;
+#else
 	clock_t   mLastTick;
 	clock_t   mCurrentTick;
+#endif
 
 	float   mElapsedSeconds;		   // Time passed since the last call to update
 	float   mFPS;					  // Calculated frame per second

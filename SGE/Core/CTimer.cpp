@@ -11,6 +11,11 @@
 
 #include "CLog.h"
 
+#if __linux
+#include <string.h>
+#include <sys/time.h>
+#endif
+
 //====================================================================================================
 // Statics
 //====================================================================================================
@@ -34,8 +39,13 @@ CTimer* CTimer::Get(void) {
 //----------------------------------------------------------------------------------------------------
 
 CTimer::CTimer(void) :
-		mLastTick(0), mCurrentTick(0), mElapsedSeconds(0.0f), mFPS(0.0f), mInitialized(
-				false) {
+		mElapsedSeconds(0.0f), mFPS(0.0f), mInitialized(false) {
+#if __linux
+	//Init mCurrTick and mLastTick?
+#else
+	mCurrTick = 0;
+	mLastTick = 0;
+#endif
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -52,8 +62,14 @@ void CTimer::Initialize(void) {
 	// Write to log
 	CLog::Get()->Write(ELogMessageType_MESSAGE, "[Timer] Initializing...");
 
-	time(&mCurrentTick);
+#if __linux
+	gettimeofday(&mCurrentTick, NULL);
+	memcpy(&mLastTick, &mCurrentTick, sizeof(timeval));
+	memcpy(&mInitTick, &mCurrentTick, sizeof(timeval));
+#else
+	mCurrentTick = clock();
 	mLastTick = mCurrentTick;
+#endif
 
 	// Set flag
 	mInitialized = true;
@@ -62,6 +78,16 @@ void CTimer::Initialize(void) {
 	CLog::Get()->Write(ELogMessageType_MESSAGE, "[Timer] Timer initialized.");
 }
 
+float CTimer::GetCurrentTick() {
+#if __linux
+	timeval temp;
+	gettimeofday(&temp, NULL);
+	return ((float) (temp.tv_sec - mInitTick.tv_sec)
+			+ ((float) (temp.tv_usec - mInitTick.tv_usec) / 1000000.0));
+#else
+	return ((float) clock()) / (float) CLOCKS_PER_SEC;
+#endif
+}
 //----------------------------------------------------------------------------------------------------
 
 void CTimer::Terminate(void) {
@@ -98,16 +124,27 @@ void CTimer::Update(void) {
 	}
 
 	// Get the current tick count
+#if __linux
+	gettimeofday(&mCurrentTick, NULL);
+	mElapsedSeconds = ((float) (mCurrentTick.tv_sec - mLastTick.tv_sec))
+			+ (((float) mCurrentTick.tv_usec) / 1000000.0)
+			- (((float) mLastTick.tv_usec) / 1000000.0);
+#else
 	mCurrentTick = clock();
 	// Calculate the elapsed time
 	mElapsedSeconds = static_cast<float>(mCurrentTick - mLastTick)
-			/ (float) CLOCKS_PER_SEC;
+	/ (float) CLOCKS_PER_SEC;
+#endif
 	if (mElapsedSeconds < 0.0) {
 		mElapsedSeconds = 0.001;
 	}
 
 	// Update the last tick count
+#if __linux
+	memcpy(&mLastTick, &mCurrentTick, sizeof(timeval));
+#else
 	mLastTick = mCurrentTick;
+#endif
 
 	static float s_FrameSinceLastSecond = 0.0f;
 	static float s_AccumulatedTime = 0.0f;

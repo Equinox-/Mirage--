@@ -18,7 +18,7 @@
 #include "../Graphics/CFont.h"
 #include "../GLUtil/Math/MathConstants.h"
 #include <math.h>
-#include <time.h>
+#include "../Core/CTimer.h"
 
 #define SHOW_USAGE_GRAPHIC 2
 //====================================================================================================
@@ -65,7 +65,7 @@ struct SText {
 struct SUsageNode {
 	std::string name;
 	float time;
-	clock_t startTick;
+	float startTick;
 	SUsageNode *parent;
 	std::vector<SUsageNode*> children;
 };
@@ -298,7 +298,7 @@ void Render(void) {
 
 #if SHOW_USAGE_GRAPHIC
 	// Just 1 layer
-	float x = 200.0;
+	float x = 300.0;
 	float y = 25.0;
 	for (size_t i = 0; i < rootNode->children.size(); ++i) {
 		y = drawUsageNode(rootNode->children[i], x, y);
@@ -314,14 +314,13 @@ void UsageBegin(const char* name) {
 	activeNode->children.push_back(node);
 	node->parent = activeNode;
 	node->name = name;
-	node->startTick = clock();
+	node->startTick = CTimer::Get()->GetCurrentTick();
 	activeNode = node;
 #endif
 }
 void UsageEnd() {
 #if SHOW_USAGE_GRAPHIC
-	activeNode->time = (float) (clock() - activeNode->startTick)
-			/ (float) CLOCKS_PER_SEC;
+	activeNode->time = CTimer::Get()->GetCurrentTick() - activeNode->startTick;
 	activeNode = activeNode->parent;
 #endif
 }
