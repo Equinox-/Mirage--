@@ -85,9 +85,9 @@ void Weather::Update(float deltaTime)
 
 void Weather::Render(SVector2 offset)
 {
-	if(Input_IsKeyDown(Keys::LSHIFT))
+	/*if(Input_IsKeyDown(Keys::LSHIFT))
 	{
 		mEmitter.SetOffset(offset);
-		mEmitter.Render();
-	}
+		mEmitter.Render();	TODO actual logic
+	}*/
 }

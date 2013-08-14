@@ -52,8 +52,7 @@
 								</option>
 								<option id="gnu.cpp.link.option.paths.911921636" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/localhome/lwestin/Programming/cpp-workspace/Eclipse++"/>
-									<listOptionValue builtIn="false" value="/localhome/lwestin/Programming/cpp-workspace/Eclipse++/SGE/Debug/"/>
-									<listOptionValue builtIn="false" value="/localhome/lwestin/Programming/cpp-workspace/Eclipse++/FMOD/lib"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SGE/Debug}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1521113082" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

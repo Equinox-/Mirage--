@@ -42,19 +42,19 @@ int BlendColor(float s, int c0, int c1) {
 	int r1, g1, b1;
 	int rf, gf, bf;
 
-	r0 = (c0 & 0x00FF0000) >> 16;
-	g0 = (c0 & 0x0000FF00) >> 8;
-	b0 = (c0 & 0x000000FF);
+	r0 = (c0 >> 24) & 0xFF;
+	g0 = (c0 >> 16) & 0xFF;
+	b0 = (c0 >> 8) & 0xFF;
 
-	r1 = (c1 & 0x00FF0000) >> 16;
-	g1 = (c1 & 0x0000FF00) >> 8;
-	b1 = (c1 & 0x000000FF);
+	r1 = (c1 >> 24) & 0xFF;
+	g1 = (c1 >> 16) & 0xFF;
+	b1 = (c1 >> 8) & 0xFF;
 
-	rf = r0 + static_cast<int>(s * (r1 - r0));
-	gf = g0 + static_cast<int>(s * (g1 - g0));
-	bf = b0 + static_cast<int>(s * (b1 - b0));
+	rf = r0 + static_cast<int>(s * (float) (r1 - r0));
+	gf = g0 + static_cast<int>(s * (float) (g1 - g0));
+	bf = b0 + static_cast<int>(s * (float) (b1 - b0));
 
-	return (0xFF << 24) | (rf << 16) | (gf << 8) | (bf);
+	return (0xFF) | (rf << 24) | (gf << 16) | (bf << 8);
 }
 
 //====================================================================================================
@@ -318,8 +318,8 @@ void SGE_Emitter::Load(const char* pEmitterName) {
 	fclose(pFile);
 
 	// Pack color
-	mStartColor = (0xFF << 24) | (r0 << 16) | (g0 << 8) | (b0);
-	mEndColor = (0xFF << 24) | (r1 << 16) | (g1 << 8) | (b1);
+	mStartColor = (0xFF) | (r0 << 24) | (g0 << 16) | (b0 << 8);
+	mEndColor = (0xFF) | (r1 << 24) | (g1 << 16) | (b1 << 8);
 
 	// Allocate memory for particles
 	mParticles = new CParticle[mMaxBufferSize];
@@ -426,7 +426,7 @@ void SGE_Emitter::Update(float fSeconds) {
 
 void SGE_Emitter::Render(bool bAdditiveBlend) {
 	if (bAdditiveBlend) {
-		// Switch to additive blending
+		// Switch to additive blending TODO
 		//CSpriteRenderer::Get()->D3DXSprite()->Flush();
 		//CDXGraphics::Get()->D3DDevice()->SetRenderState(D3DRS_SRCBLEND,
 		//		D3DBLEND_ONE);
