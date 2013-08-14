@@ -44,7 +44,7 @@ const int EQUALS = '=';
 const int BACKSPACE = '\b';
 
 // Keyboard roll 3
-const int TAB ='\t';
+const int TAB = '\t';
 const int Q = 'q';
 const int W = 'w';
 const int E = 'e';
@@ -118,20 +118,20 @@ const int PGDN = 117;
 
 // Support keys
 const int LSHIFT = 150;
-const int RSHIFT = 162;
+const int RSHIFT = LSHIFT;
 const int LCONTROL = 137;
-const int RCONTROL = 105;
-const int LALT = 164;
-const int RALT = 108;
-const int LWIN = 133;
-const int RWIN = 135;
+const int RCONTROL = LCONTROL;
+const int LALT = 208;
+const int RALT = LALT;
+const int LWIN = 233;
+const int RWIN = LWIN;
 const int SPACE = ' ';
 
 // Arrow keys
-const int UP = 111;
-const int DOWN = 116;
-const int LEFT = 113;
-const int RIGHT = 114;
+const int UP = 211;
+const int DOWN = 212;
+const int LEFT = 213;
+const int RIGHT = 214;
 }
 
 //----------------------------------------------------------------------------------------------------
